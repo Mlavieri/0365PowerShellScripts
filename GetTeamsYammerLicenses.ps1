@@ -44,4 +44,4 @@ foreach ($user in $users){
     }
 }
 
-$csvContents | Export-CSV -Path F:\YammerUsers.csv
+$csvContents | Export-CSV -Path C:\YammerTeamsUsers.csv
