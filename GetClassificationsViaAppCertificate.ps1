@@ -1,9 +1,10 @@
 #Connect Using Certificate Thumbprint
--PnPOnline `
+Connect-PnPOnline `
             -Thumbprint '<>' `
             -Tenant <>.onmicrosoft.com `
             -ClientId <> `
             -Url https://<>-admin.sharepoint.com
+            
 #Get All Sites
 $sites = Get-PnPTenantSite
 
