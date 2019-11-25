@@ -1,38 +1,57 @@
+Param(
+
+   [Parameter(Mandatory=$true)]
+   [string]$Tenant,
+
+   [Parameter(Mandatory=$true)]
+   [string]$Thumbprint,
+   
+   [Parameter(Mandatory=$true)]
+   [string]$Client,
+
+   #https://tenant.sharepoint.com/site/
+   [Parameter(Mandatory=$true)]
+   [string]$ListSiteURL,
+
+   [Parameter(Mandatory=$true)]
+   [string]$ListName
+)
+
+$Domain = $Tenant+".onmicrosoft.com"
+$AdminURL = "https://"+$Tenant+"-admin.sharepoint.com"
+
+
 #Connect Using Certificate Thumbprint
+
 Connect-PnPOnline `
-            -Thumbprint '<>' `
-            -Tenant <>.onmicrosoft.com `
-            -ClientId <> `
-            -Url https://<>-admin.sharepoint.com
-            
-#Get All Sites
+            -Thumbprint $Thumbprint `
+            -Tenant $Domain `
+            -ClientId $Client `
+            -Url $AdminURL
+
 $sites = Get-PnPTenantSite
 
-#Lopp through each site
 foreach ($site in $sites){
 
-#Connect to site
     Connect-PnPOnline `
-        -Thumbprint '<>' `
-        -Tenant <>.onmicrosoft.com `
-        -ClientId <> `
+        -Thumbprint $Thumbprint `
+        -Tenant $Domain `
+        -ClientId $Client `
         -Url $site.Url
 
-#Check Classification
     $sp = Get-PnPSite
     $classificationValue = Get-PnPProperty -ClientObject $sp -Property Classification
 
-#If Classification zmeets Value
     if ($classificationValue -eq "Sensitive"){
-        Connect-PnPOnline `
-            -Thumbprint '<>' `
-            -Tenant <>.onmicrosoft.com `
-            -ClientId <> `
-            -Url https://<>.sharepoint.com
+             Disconnect-PnPOnline
+             Connect-PnPOnline `
+            -Thumbprint $Thumbprint `
+            -Tenant $Domain `
+            -ClientId $Client `
+            -Url $ListSiteUrl
         $url = Get-PnPProperty -ClientObject $sp -Property Url
-       $Owner = Get-PnPProperty -ClientObject $sp -Property Owner
-       #Write output to SP List at Root SC
-       Add-PnPListItem -List "SPSites" -Values @{"Title" = $url; "Classification" = $classificationValue; "Owner" = $Owner.Email; "Url" = $url}
+        $Owner = Get-PnPProperty -ClientObject $sp -Property Owner
+        Add-PnPListItem -List $ListName -Values @{"Title" = $url; "Classification" = $classificationValue; "Owner" = $Owner.Email; "Url" = $url}
     }
     $classificationValue = ""
 }
