@@ -27,7 +27,7 @@ foreach ($site in $sites){
         Connect-PnPOnline `
             -Thumbprint '<>' `
             -Tenant <>.onmicrosoft.com `
-            -ClientId 89ef4612-fad4-48ac-a18d-018d49f340a5 `
+            -ClientId <> `
             -Url https://<>.sharepoint.com
         $url = Get-PnPProperty -ClientObject $sp -Property Url
        $Owner = Get-PnPProperty -ClientObject $sp -Property Owner
