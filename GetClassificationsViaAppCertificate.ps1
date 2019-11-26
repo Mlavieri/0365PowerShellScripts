@@ -1,3 +1,6 @@
+#Uncomment Params when testing application or for single use
+
+<#
 Param(
 
    [Parameter(Mandatory=$true)]
@@ -16,6 +19,12 @@ Param(
    [Parameter(Mandatory=$true)]
    [string]$ListName
 )
+#>
+$Tenant = <Tenant>
+$Client = <ClientID>
+$Thumbprint = <Cert Thumbprint>
+$ListSiteURL = <Target List Site>
+$ListName = <Target list name>
 
 $Domain = $Tenant+".onmicrosoft.com"
 $AdminURL = "https://"+$Tenant+"-admin.sharepoint.com"
